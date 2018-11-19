@@ -75,19 +75,41 @@ Redis Sentinel provides high availability for Redis. In practical terms this mea
 
 ## Redis Data Types
 
-Great source for this document: https://redis.io/topics/data-types-intro
+### STRING
+	Strings, integers, or floating-point values. Binary-safe
 
- * Binary-safe strings.
- * Lists
-  > collections of string elements sorted according to the order of insertion. They are basically linked lists.
- * Sets:
-  > collections of unique, unsorted string elements.
- * Sorted sets
-  > similar to Sets but where every string element is associated to a floating number value, called score. The elements are always taken sorted by their score, so unlike Sets it is possible to retrieve a range of elements (for example you may ask: give me the top 10, or the bottom 10).
- * Hashes
-  > which are maps composed of fields associated with values. Both the field and the value are strings. This is very similar to Ruby or Python hashes.
- * Bit arrays (or simply bitmaps)
-  > it is possible, using special commands, to handle String values like an array of bits: you can set and clear individual bits, count all the bits set to 1, find the first set or unset bit, and so forth.
+Operate on the whole string, parts, increment/ decrement the integers and floats
+
+### LIST
+    Linked list of strings
+
+Push or pop items from both ends, trim based on offsets, read individual or multiple items, find or remove items by value
+
+### SET
+    Unordered collection of unique strings
+
+Add, fetch, or remove individual items, check membership, intersect, union, difference, fetch random items
+
+### Sorted sets
+    Similar to Sets but where every string element is associated to a floating number value, called score.
+
+The elements are always taken sorted by their score, so unlike Sets it is possible to retrieve a range of elements (for example you may ask: give me the top 10, or the bottom 10).
+
+### HASH
+    Unordered hash table of keys to values
+
+Add, fetch, or remove individual items, fetch the whole hash
+
+### ZSET (sorted set)
+    Ordered mapping of string members to floating-point scores, ordered by score
+
+Add, fetch, or remove individual values, fetch items based on score ranges or member value
+
+### Bit arrays (or simply bitmaps)
+
+It is possible, using special commands, to handle String values like an array of bits: you can set and clear individual bits, count all the bits set to 1, find the first set or unset bit, and so forth.
+
+Great source for this document: https://redis.io/topics/data-types-intro https://redislabs.com/ebook/part-1-getting-started/chapter-1-getting-to-know-redis/1-2-what-redis-data-structures-look-like/
 
 ### Lists
 
@@ -163,7 +185,11 @@ Anything binary can be a key, they are binary safe, there is though a way to str
     return cjson.encode(counts)
 ```
 
-## Mautic use
+##### Atomicity of scripts
+
+Redis uses the same Lua interpreter to run all the commands. Also Redis guarantees that a script is executed in an atomic way: no other script or Redis command will be executed while a script is being executed.
+
+## Mautic's use ideas
 
  * Segments would not have to be queried in loop, we could fetch them all at once and let redis page it
  * Queue for inserting new contacts into segments
